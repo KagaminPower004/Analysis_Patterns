@@ -31,7 +31,8 @@ class Soshiki {
         //制約チェック(外だし)
         Judge_SoshikiMeiConstraint this_Soshiki
                 = new Judge_SoshikiMeiConstraint(this.kaisouMei,this.soshikiMei);
-        if(this_Soshiki.isBadSoshikiMei()){ throw new RuntimeException("組織名が正しい値ではございません。"); }
+        if(this_Soshiki.isBadSoshikiMei())
+            { throw new RuntimeException(this_Soshiki.sysOutResultMessage()); }
     }
 
     public void add(Soshiki Soshiki){
@@ -39,23 +40,29 @@ class Soshiki {
         KaisouMei ko  = new KaisouMei(Soshiki.kaisouMei_toString());
 
         //制約チェック(外だし)
-        Judge_KaisouConstraint this_Kaisou = new Judge_KaisouConstraint( oya ,ko);
-        if(this_Kaisou.isBadKoKaisou()){ throw new RuntimeException("正しい子階層の値ではございません。"); }
+        Judge_KaisouConstraint this_Kaisou
+                = new Judge_KaisouConstraint( oya ,ko);
+        if(this_Kaisou.isBadKoKaisou())
+            { throw new RuntimeException("正しい子階層の値ではございません。:" + oya + ko); }
+
         list.add(Soshiki);
     }
 
-    public String kaisouMei_toString(){ return this.kaisouMei.kaisouMei();}
+    public String kaisouMei_toString(){
+        return this.kaisouMei.kaisouMei();
+    }
 
     public void soshikiHyo(){
         //組織一覧を描画
-        String sout = new DrawThree(this.kaisouLevel.kaisouLevel()
-                                    ,this.kaisouMei.kaisouMei()
-                                    ,this.soshikiMei.soshikiMei())
-                            .Draw();
+        String sout
+                = new DrawThree(this.kaisouLevel.kaisouLevel()
+                                ,this.kaisouMei.kaisouMei()
+                                ,this.soshikiMei.soshikiMei()
+                                ).Draw();
         System.out.println(sout);
 
-        for (chapter02.section02.Soshiki Soshiki : list) {
-            Soshiki.soshikiHyo();
+        for (Soshiki listElement : list) {
+            listElement.soshikiHyo();
         }
     }
 }
@@ -72,7 +79,8 @@ record KaisouLevel( Integer kaisouLevel ) {
         //レベル数値の範囲チェック
         Judge_RangeConstraint this_LevelValue
                 = new Judge_RangeConstraint(MAX_Charactor, MIN_Charactor, kaisouLevel);
-        if(this_LevelValue.isError()){ throw new RuntimeException("設定した階層レベルは範囲内の数値ではございません。");}
+        if(this_LevelValue.isError())
+            { throw new RuntimeException("設定した階層レベルは範囲内の数値ではございません。:" + kaisouLevel);}
     }
 }
 
@@ -87,7 +95,8 @@ record KaisouMei(String kaisouMei ) {
         //文字数の範囲チェック
         Judge_RangeConstraint this_KaisouMei
                 = new Judge_RangeConstraint(MAX_Charactor, MIN_Charactor, kaisouMei.length());
-        if(this_KaisouMei.isError()){ throw new RuntimeException("設定した階層名は範囲内の文字数ではございません。");}
+        if(this_KaisouMei.isError())
+            { throw new RuntimeException("設定した階層名は範囲内の文字数ではございません。:" + kaisouMei);}
     }
 }
 
@@ -102,7 +111,8 @@ record SoshikiMei( String soshikiMei ) {
         //文字数の範囲チェック
         Judge_RangeConstraint this_soshikiMei
                 = new Judge_RangeConstraint(MAX_Charactor, MIN_Charactor, soshikiMei.length());
-        if(this_soshikiMei.isError()){ throw new RuntimeException("設定した組織名は範囲内の文字数ではございません。");}
+        if(this_soshikiMei.isError())
+            { throw new RuntimeException("設定した組織名は範囲内の文字数ではございません。:" + soshikiMei);}
     }
 }
 
@@ -142,36 +152,38 @@ class Judge_KaisouConstraint {
     }
 
     public Boolean isKoKaisou(){
-        boolean result = false;
 
         switch (kaisouMei.kaisouMei()) {
             case "事業部" -> {
-                if (oyaKaisouMei.kaisouMei() == "") {
-                    result = true;
+                if (oyaKaisouMei.kaisouMei() == "")
+                {
+                    return true;
                 }
             }
             case "地域" -> {
                 if (oyaKaisouMei.kaisouMei() == "事業部") {
-                    result = true;
+                    return true;
                 }
             }
             case "部門", "サービスセンター" -> {
                 if (oyaKaisouMei.kaisouMei() == "地域") {
-                    result = true;
+                    return true;
                 }
             }
             case "営業所" -> {
                 if (oyaKaisouMei.kaisouMei() == "部門") {
-                    result = true;
+                    return true;
                 }
                 if (oyaKaisouMei.kaisouMei() == "サービスセンター") {
-                    result = true;
+                    return true;
                 }
             }
+            default -> {
+                return false;
+            }
         }
-        return result;
+        return true;
     }
-
     public Boolean isBadKoKaisou(){
         return ! this.isKoKaisou();
     }
@@ -182,42 +194,92 @@ class Judge_KaisouConstraint {
 class Judge_SoshikiMeiConstraint {
     private final KaisouMei  kaisouMei;
     private final SoshikiMei soshikiMei;
-    private static Map<String,String> soshikiMeiList = new HashMap<>();
+    private static List<String> soshikiMeiList
+            = new ArrayList<>();
+    private static List<String> soshikiMeiMessageList
+            = new ArrayList<>();
 
-    public Judge_SoshikiMeiConstraint(KaisouMei kaisouMei, SoshikiMei soshikiMei){
+    public Judge_SoshikiMeiConstraint(
+              KaisouMei kaisouMei
+            , SoshikiMei soshikiMei
+    )
+    {
         this.kaisouMei  = kaisouMei;
         this.soshikiMei = soshikiMei;
     }
 
-    public Boolean isSoshikiMei(){
-        boolean result;
+    public final String sysOutResultMessage(){
+        return Arrays.toString(
+                this.resultMessage().toArray()
+        );
+    }
 
-        switch (kaisouMei.kaisouMei()) {
-            case "地域" -> {
-                new TiikiMei(soshikiMei.soshikiMei());
-                result = true;
-            }
-            default -> result = true;
-        }
+    public final List<String> resultMessage(){
+        return soshikiMeiMessageList;
+    }
+
+    public Boolean isSoshikiMei(){
+
+        //内容チェック
+        if( this.isBadContents() ){ return false; }
 
         //二重登録チェック
-        if(this.isDouble()){ result = false; }
+        if( this.isDouble() ){ return false; }
 
-        return result;
+        //最終結果
+        return true;
     }
-    private Boolean isDouble(){
-
-        //重複チェック
-        String checkKey = kaisouMei.kaisouMei() + soshikiMei.soshikiMei();
-        if(soshikiMeiList.get(checkKey) == null){ keySet(checkKey); return false;}
-        else { return true; }
-    }
-    private void keySet(String newKey){
-        soshikiMeiList.put(newKey,newKey);
-    }
-
     public Boolean isBadSoshikiMei(){
         return ! this.isSoshikiMei();
+    }
+
+    private Boolean isContents(){
+
+        //内容チェック
+        switch (kaisouMei.kaisouMei()) {
+            case "地域" ->
+                    {
+                        //『地域名』オブジェクトに例外処理を丸投げ
+                        try
+                            { new TiikiMei(soshikiMei.soshikiMei()); }
+                        catch (Exception e)
+                            {
+                                soshikiMeiMessageList.add(e.getMessage());
+                                return false;
+                            }
+                        return true;
+                    }
+            default ->
+                    {
+                        return true;
+                    }
+        }
+    }
+    private Boolean isBadContents(){
+        return ! this.isContents();
+    }
+
+    private Boolean isDouble(){
+        String checkKey = kaisouMei.kaisouMei() + soshikiMei.soshikiMei();
+
+        //キー登録
+        keySet(checkKey);
+
+        //重複チェック(※けっきょく楽なんでStreamで逃げた)
+        if(soshikiMeiList
+                .stream()
+                .filter(allList -> allList.equals(checkKey))
+                .count() == 2
+            )
+            {
+                soshikiMeiMessageList.add("二重登録違反:" + checkKey);
+                return true;
+            }
+        else
+            { return false; }
+    }
+    private void keySet(String newKey){
+        soshikiMeiList.add(newKey);
     }
 }
 
@@ -232,12 +294,14 @@ record TiikiMei(String tiikiMei) {
         //文字数範囲チェック
         Judge_RangeConstraint this_tiikiMei
                 = new Judge_RangeConstraint(MAX_Charactor, MIN_Charactor, tiikiMei.length());
-        if(this_tiikiMei.isError()) { throw new RuntimeException("設定した地域名は範囲内の文字数ではございません。");}
+        if(this_tiikiMei.isError())
+            { throw new RuntimeException("設定した地域名は範囲内の文字数ではございません。:" + tiikiMei);}
 
         //地域名の内容チェック
         Judge_TiikiMeiConstraint this_tiikiMei_naiyo
                 = new Judge_TiikiMeiConstraint(tiikiMei);
-        if(this_tiikiMei_naiyo.isError()){ throw new RuntimeException("設定した地域名は正しい名称ではありません。");}
+        if(this_tiikiMei_naiyo.isError())
+            { throw new RuntimeException("設定した地域名は正しい名称ではありません。:" + tiikiMei);}
     }
 }
 
@@ -245,10 +309,13 @@ record TiikiMei(String tiikiMei) {
 class Judge_TiikiMeiConstraint {
     String tiikiMei;
 
-    Judge_TiikiMeiConstraint(String tiikiMei){ this.tiikiMei = tiikiMei; }
+    Judge_TiikiMeiConstraint(String tiikiMei){
+        this.tiikiMei = tiikiMei;
+    }
 
     public boolean isCollect(){
-        boolean result = switch (tiikiMei) {
+
+        return switch (tiikiMei) {
             case "北海道" -> true;
             case "東北" -> true;
             case "北陸" -> true;
@@ -256,8 +323,6 @@ class Judge_TiikiMeiConstraint {
             case "南関東" -> true;
             default -> false;
         };
-
-        return result;
     }
 
     public Boolean isError(){
@@ -272,7 +337,8 @@ class DrawThree {
     private final String KaisouMei;
     private final String soshikiMei;
 
-    DrawThree(Integer level, String KaisouMei, String soshikiMei){
+    DrawThree(Integer level, String KaisouMei, String soshikiMei)
+    {
         this.level = level;
         this.KaisouMei = KaisouMei;
         this.soshikiMei = soshikiMei;
@@ -303,6 +369,10 @@ class Actor_GyoumuTantoSha {
         Soshiki Bumon         = new Soshiki(3,"部門","第一営業部");
         Soshiki ServiceCenter = new Soshiki(3,"サービスセンター","北陸サービスセンター");
         Soshiki EigyouSho     = new Soshiki(4,"営業所","北陸第一営業所");
+//        Soshiki EigyouSho2     = new Soshiki(4,"営業所","北陸第一営業所"); //『階層名 + 組織名』の二重登録違反データ
+//        Soshiki EigyouSho3     = new Soshiki(4,"営業所",""); //範囲外データ(少)
+//        Soshiki EigyouSho4     = new Soshiki(4,"営業所","北陸第一営業所ショアアアアアアアアアアアアアアアアアア！！！"); //範囲外データ(多)
+//        Soshiki EigyouSho4     = new Soshiki(999,"宿営所","北陸『これからの星』宿営所"); //範囲外データ(多)
 
         //階層紐づけ作業
         JigyouBu.add(Tiiki);
@@ -315,6 +385,7 @@ class Actor_GyoumuTantoSha {
         //新たに『サービスセンター』を追加
         Tiiki.add(ServiceCenter);
         ServiceCenter.add(EigyouSho);
+//        ServiceCenter.add(EigyouSho); //『＜階層名+組織名＞の親子の組み合わせ』二重違反データ →2022/03/22残課題
 
         //組織表描画(追加)
         ServiceCenter.soshikiHyo();
