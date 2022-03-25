@@ -3,7 +3,7 @@ package chapter02.section02;
 import javax.management.ConstructorParameters;
 import java.util.*;
 
-//※素早く作りために、とりま１ファイルに『一筆書き』で記述。
+//※素早く作るために、とりま１ファイルに『一筆書き』で記述。
 //その目的のために下記空のクラスファイルを作成。
 class Analysis_Patterns_Chp02_Sec02_Sample {}
 
