@@ -43,7 +43,7 @@ class Soshiki {
         Judge_KaisouConstraint this_Kaisou
                 = new Judge_KaisouConstraint( oya ,ko);
         if(this_Kaisou.isBadKoKaisou())
-            { throw new RuntimeException("正しい子階層の値ではございません。:" + oya + ko); }
+            { throw new RuntimeException( this_Kaisou.sysOutResultMessage() ); }
 
         list.add(Soshiki);
     }
@@ -145,47 +145,102 @@ class Judge_KaisouConstraint {
 
     private final KaisouMei oyaKaisouMei;
     private final KaisouMei kaisouMei;
+    private static final List<String> kaisouMeiList
+            = new ArrayList<>();
+    private static final List<String> kaisouMeiMessageList
+            = new ArrayList<>();
 
     Judge_KaisouConstraint(KaisouMei oyaKaisouMei , KaisouMei kaisouMei) {
         this.oyaKaisouMei   = oyaKaisouMei;
         this.kaisouMei      = kaisouMei;
     }
 
+    public final String sysOutResultMessage(){
+        return Arrays.toString(
+                this.resultMessage().toArray()
+        );
+    }
+
+    public final List<String> resultMessage(){
+        return kaisouMeiMessageList;
+    }
+
     public Boolean isKoKaisou(){
 
+        //内容チェック
+        if(this.isBadContents()){ return false; }
+
+        //二重登録チェック
+        if( this.isDouble() )   { return false; }
+
+        return true;
+    }
+    public Boolean isBadKoKaisou(){
+        return ! this.isKoKaisou();
+    }
+
+    private Boolean isContents(){
+
+        //内容チェック
         switch (kaisouMei.kaisouMei()) {
             case "事業部" -> {
-                if (oyaKaisouMei.kaisouMei() == "")
+                if (oyaKaisouMei.kaisouMei().equals("") )
                 {
                     return true;
                 }
             }
             case "地域" -> {
-                if (oyaKaisouMei.kaisouMei() == "事業部") {
+                if (oyaKaisouMei.kaisouMei().equals("事業部") ) {
                     return true;
                 }
             }
             case "部門", "サービスセンター" -> {
-                if (oyaKaisouMei.kaisouMei() == "地域") {
+                if (oyaKaisouMei.kaisouMei().equals("地域") ) {
                     return true;
                 }
             }
             case "営業所" -> {
-                if (oyaKaisouMei.kaisouMei() == "部門") {
+                if (oyaKaisouMei.kaisouMei().equals("部門") ) {
                     return true;
                 }
-                if (oyaKaisouMei.kaisouMei() == "サービスセンター") {
+                if (oyaKaisouMei.kaisouMei().equals("サービスセンター") ) {
                     return true;
                 }
             }
             default -> {
+                kaisouMeiMessageList.add("正しい子階層の値ではございません。:"
+                        + oyaKaisouMei.kaisouMei()
+                        + kaisouMei.kaisouMei()
+                );
                 return false;
             }
         }
         return true;
     }
-    public Boolean isBadKoKaisou(){
-        return ! this.isKoKaisou();
+    private Boolean isBadContents(){ return ! this.isContents(); }
+
+    private Boolean isDouble(){
+        String checkKey = "親：" + oyaKaisouMei.kaisouMei()
+                      + "／子：" + kaisouMei.kaisouMei();
+
+        //キー登録
+        keySet(checkKey);
+
+        //重複チェック(※けっきょく楽なんでStreamで逃げた)
+        if(kaisouMeiList
+                .stream()
+                .filter(allList -> allList.equals(checkKey))
+                .count() == 2
+        )
+        {
+            kaisouMeiMessageList.add("二重登録違反:" + checkKey);
+            return true;
+        }
+        else
+        { return false; }
+    }
+    private void keySet(String newKey){
+        kaisouMeiList.add(newKey);
     }
 
 }
@@ -194,9 +249,9 @@ class Judge_KaisouConstraint {
 class Judge_SoshikiMeiConstraint {
     private final KaisouMei  kaisouMei;
     private final SoshikiMei soshikiMei;
-    private static List<String> soshikiMeiList
+    private static final List<String> soshikiMeiList
             = new ArrayList<>();
-    private static List<String> soshikiMeiMessageList
+    private static final List<String> soshikiMeiMessageList
             = new ArrayList<>();
 
     public Judge_SoshikiMeiConstraint(
@@ -260,7 +315,7 @@ class Judge_SoshikiMeiConstraint {
     }
 
     private Boolean isDouble(){
-        String checkKey = kaisouMei.kaisouMei() + soshikiMei.soshikiMei();
+        String checkKey = kaisouMei.kaisouMei() + "／" + soshikiMei.soshikiMei();
 
         //キー登録
         keySet(checkKey);
@@ -385,7 +440,7 @@ class Actor_GyoumuTantoSha {
         //新たに『サービスセンター』を追加
         Tiiki.add(ServiceCenter);
         ServiceCenter.add(EigyouSho);
-//        ServiceCenter.add(EigyouSho); //『＜階層名+組織名＞の親子の組み合わせ』二重違反データ →2022/03/22残課題
+//        ServiceCenter.add(EigyouSho); //『＜階層名+組織名＞の親子の組み合わせ』二重違反データ
 
         //組織表描画(追加)
         ServiceCenter.soshikiHyo();
