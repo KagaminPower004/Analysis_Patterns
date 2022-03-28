@@ -145,10 +145,9 @@ class Judge_KaisouConstraint {
 
     private final KaisouMei oyaKaisouMei;
     private final KaisouMei kaisouMei;
-    private static final List<String> kaisouMeiList
-            = new ArrayList<>();
-    private static final List<String> kaisouMeiMessageList
-            = new ArrayList<>();
+    private final MakeMessageOutPut_Judge_KaisouConstraint
+            makeLog_Judge_KaisouConstraint
+            = new MakeMessageOutPut_Judge_KaisouConstraint();
 
     Judge_KaisouConstraint(KaisouMei oyaKaisouMei , KaisouMei kaisouMei) {
         this.oyaKaisouMei   = oyaKaisouMei;
@@ -156,13 +155,17 @@ class Judge_KaisouConstraint {
     }
 
     public final String sysOutResultMessage(){
-        return Arrays.toString(
-                this.resultMessage().toArray()
-        );
+        //※念のためマトリョーシカにしておく
+        return this
+                .makeLog_Judge_KaisouConstraint
+                .sysOutResultMessage();
     }
 
+    //急場で使うかもしれんので残しとく
     public final List<String> resultMessage(){
-        return kaisouMeiMessageList;
+        return this
+                .makeLog_Judge_KaisouConstraint
+                .resultMessage();
     }
 
     public Boolean isKoKaisou(){
@@ -180,6 +183,57 @@ class Judge_KaisouConstraint {
     }
 
     private Boolean isContents(){
+
+        //内容チェック
+        Check_KaisouContents myCheck_KaisouContents
+                = new Check_KaisouContents(this.oyaKaisouMei,this.kaisouMei);
+
+        return myCheck_KaisouContents.isContents();
+    }
+    private Boolean isBadContents(){ return ! this.isContents(); }
+
+    private Boolean isDouble(){
+        Check_DoubleEntryKaisouMei myCheck_DoubleEntryKaisouMei
+                = new Check_DoubleEntryKaisouMei(this.oyaKaisouMei,this.kaisouMei);
+
+        return myCheck_DoubleEntryKaisouMei.isDouble();
+    }
+}
+
+//『階層制約専用メッセージ出力』クラス
+class MakeMessageOutPut_Judge_KaisouConstraint {
+
+    private static final List<String> kaisouMeiMessageList
+            = new ArrayList<>();
+
+    MakeMessageOutPut_Judge_KaisouConstraint(){}
+    MakeMessageOutPut_Judge_KaisouConstraint(String kaisouMeiMessage) {
+        kaisouMeiMessageList.add(kaisouMeiMessage);
+    }
+
+    public final String sysOutResultMessage(){
+        return Arrays.toString(
+                this.resultMessage().toArray()
+        );
+    }
+
+    public final List<String> resultMessage(){
+        return kaisouMeiMessageList;
+    }
+}
+
+//『階層内容チェック』クラス
+class Check_KaisouContents{
+
+    private final KaisouMei oyaKaisouMei;
+    private final KaisouMei kaisouMei;
+
+    Check_KaisouContents(KaisouMei oyaKaisouMei , KaisouMei kaisouMei ){
+        this.oyaKaisouMei = oyaKaisouMei;
+        this.kaisouMei    =    kaisouMei;
+    }
+
+    protected Boolean isContents(){
 
         //内容チェック
         switch (kaisouMei.kaisouMei()) {
@@ -208,20 +262,36 @@ class Judge_KaisouConstraint {
                 }
             }
             default -> {
-                kaisouMeiMessageList.add("正しい子階層の値ではございません。:"
-                        + oyaKaisouMei.kaisouMei()
-                        + kaisouMei.kaisouMei()
+                new MakeMessageOutPut_Judge_KaisouConstraint(
+                        "正しい子階層の値ではございません。:"
+                                + oyaKaisouMei.kaisouMei()
+                                + kaisouMei.kaisouMei()
                 );
                 return false;
             }
         }
         return true;
     }
-    private Boolean isBadContents(){ return ! this.isContents(); }
+    //念のためこの子も(^^;
+    protected Boolean isBadContents(){ return ! this.isContents(); }
+}
 
-    private Boolean isDouble(){
+//『階層二重登録チェック』クラス
+class Check_DoubleEntryKaisouMei{
+
+    private final KaisouMei oyaKaisouMei;
+    private final KaisouMei kaisouMei;
+    private static final List<String> kaisouMeiList
+            = new ArrayList<>();
+
+    Check_DoubleEntryKaisouMei(KaisouMei oyaKaisouMei , KaisouMei kaisouMei ){
+        this.oyaKaisouMei = oyaKaisouMei;
+        this.kaisouMei    =    kaisouMei;
+    }
+
+    protected Boolean isDouble(){
         String checkKey = "親：" + oyaKaisouMei.kaisouMei()
-                      + "／子：" + kaisouMei.kaisouMei();
+                + "／子：" + kaisouMei.kaisouMei();
 
         //キー登録
         keySet(checkKey);
@@ -233,7 +303,9 @@ class Judge_KaisouConstraint {
                 .count() == 2
         )
         {
-            kaisouMeiMessageList.add("二重登録違反:" + checkKey);
+            new MakeMessageOutPut_Judge_KaisouConstraint(
+                    "二重登録違反:" + checkKey
+            );
             return true;
         }
         else
@@ -242,7 +314,6 @@ class Judge_KaisouConstraint {
     private void keySet(String newKey){
         kaisouMeiList.add(newKey);
     }
-
 }
 
 //『組織名称制約』クラス(の、つもり。。。)
