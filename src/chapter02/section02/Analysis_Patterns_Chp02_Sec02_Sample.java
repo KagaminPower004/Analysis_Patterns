@@ -43,7 +43,7 @@ class Soshiki {
         Judge_KaisouConstraint this_Kaisou
                 = new Judge_KaisouConstraint( oya ,ko);
         if(this_Kaisou.isBadKoKaisou())
-            { throw new RuntimeException( this_Kaisou.sysOutResultMessage() ); }
+            { throw new RuntimeException( "組織階層の追加の際にエラーが発生致しました。" ); }
 
         list.add(Soshiki);
     }
@@ -145,27 +145,10 @@ class Judge_KaisouConstraint {
 
     private final KaisouMei oyaKaisouMei;
     private final KaisouMei kaisouMei;
-    private final MakeMessageOutPut_Judge_KaisouConstraint
-            makeLog_Judge_KaisouConstraint
-            = new MakeMessageOutPut_Judge_KaisouConstraint();
 
     Judge_KaisouConstraint(KaisouMei oyaKaisouMei , KaisouMei kaisouMei) {
         this.oyaKaisouMei   = oyaKaisouMei;
         this.kaisouMei      = kaisouMei;
-    }
-
-    public final String sysOutResultMessage(){
-        //※念のためマトリョーシカにしておく
-        return this
-                .makeLog_Judge_KaisouConstraint
-                .sysOutResultMessage();
-    }
-
-    //急場で使うかもしれんので残しとく
-    public final List<String> resultMessage(){
-        return this
-                .makeLog_Judge_KaisouConstraint
-                .resultMessage();
     }
 
     public Boolean isKoKaisou(){
@@ -200,25 +183,11 @@ class Judge_KaisouConstraint {
     }
 }
 
-//『階層制約専用メッセージ出力』クラス
-class MakeMessageOutPut_Judge_KaisouConstraint {
+//『階層制約専用エラーメッセージ出力』クラス
+class MakeErrorMessageOutPut_Judge_KaisouConstraint {
 
-    private static final List<String> kaisouMeiMessageList
-            = new ArrayList<>();
-
-    MakeMessageOutPut_Judge_KaisouConstraint(){}
-    MakeMessageOutPut_Judge_KaisouConstraint(String kaisouMeiMessage) {
-        kaisouMeiMessageList.add(kaisouMeiMessage);
-    }
-
-    public final String sysOutResultMessage(){
-        return Arrays.toString(
-                this.resultMessage().toArray()
-        );
-    }
-
-    public final List<String> resultMessage(){
-        return kaisouMeiMessageList;
+    MakeErrorMessageOutPut_Judge_KaisouConstraint(String kaisouMeiMessage) {
+        throw new RuntimeException(kaisouMeiMessage) ;
     }
 }
 
@@ -261,16 +230,16 @@ class Check_KaisouContents{
                     return true;
                 }
             }
-            default -> {
-                new MakeMessageOutPut_Judge_KaisouConstraint(
-                        "正しい子階層の値ではございません。:"
-                                + oyaKaisouMei.kaisouMei()
-                                + kaisouMei.kaisouMei()
-                );
-                return false;
-            }
         }
-        return true;
+
+        new MakeErrorMessageOutPut_Judge_KaisouConstraint(
+                "正しい子階層の値ではございません。:"
+                        + "親:" + oyaKaisouMei.kaisouMei()
+                        + "／"
+                        + "子:" + kaisouMei.kaisouMei()
+        );
+
+        return false;
     }
     //念のためこの子も(^^;
     protected Boolean isBadContents(){ return ! this.isContents(); }
@@ -303,7 +272,7 @@ class Check_DoubleEntryKaisouMei{
                 .count() == 2
         )
         {
-            new MakeMessageOutPut_Judge_KaisouConstraint(
+            new MakeErrorMessageOutPut_Judge_KaisouConstraint(
                     "二重登録違反:" + checkKey
             );
             return true;
@@ -512,6 +481,7 @@ class Actor_GyoumuTantoSha {
         Tiiki.add(ServiceCenter);
         ServiceCenter.add(EigyouSho);
 //        ServiceCenter.add(EigyouSho); //『＜階層名+組織名＞の親子の組み合わせ』二重違反データ
+//        EigyouSho.add(Bumon); //『親子階層』制約違反エラー
 
         //組織表描画(追加)
         ServiceCenter.soshikiHyo();
