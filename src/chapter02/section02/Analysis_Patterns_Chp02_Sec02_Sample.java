@@ -161,10 +161,10 @@ class Judge_KaisouConstraint {
     public Boolean isKoKaisou(){
 
         //内容チェック
-        if(this.isBadContents()){ return false; }
+        if(this.isBadContents()) { return false; }
 
         //二重登録チェック
-        if( this.isDouble() )   { return false; }
+        if(this.isDouble())      { return false; }
 
         return true;
     }
@@ -245,33 +245,27 @@ class Check_KaisouContents{
 
         return false;
     }
-    //念のためこの子も(^^;
-    protected Boolean isBadContents(){ return ! this.isContents(); }
 }
 
-//『階層名二重登録チェック』クラス
-class Check_DoubleEntryKaisouMei{
+//『二重登録チェック基底部』クラス
+class Check_Base_DoubleEntry {
 
-    private final KaisouMei oyaKaisouMei;
-    private final KaisouMei kaisouMei;
-    private static final List<String> kaisouMeiList
+    private final String checkKey;
+    private static final List<String> entryList
             = new ArrayList<>();
 
     //コンストラクタ
-    Check_DoubleEntryKaisouMei(KaisouMei oyaKaisouMei , KaisouMei kaisouMei ){
-        this.oyaKaisouMei = oyaKaisouMei;
-        this.kaisouMei    =    kaisouMei;
+    Check_Base_DoubleEntry(String checkKey ){
+        this.checkKey = checkKey;
     }
 
     protected Boolean isDouble(){
-        String checkKey = "親：" + oyaKaisouMei.kaisouMei()
-                + "／子：" + kaisouMei.kaisouMei();
 
         //キー登録
         keySet(checkKey);
 
         //重複チェック(※けっきょく楽なんでStreamで逃げた)
-        if(kaisouMeiList
+        if(entryList
                 .stream()
                 .filter(allList -> allList.equals(checkKey))
                 .count() == 2
@@ -286,7 +280,27 @@ class Check_DoubleEntryKaisouMei{
         { return false; }
     }
     private void keySet(String newKey){
-        kaisouMeiList.add(newKey);
+        entryList.add(newKey);
+    }
+}
+
+//『階層名二重登録チェック』クラス
+class Check_DoubleEntryKaisouMei{
+
+    private final KaisouMei oyaKaisouMei;
+    private final KaisouMei kaisouMei;
+
+    //コンストラクタ
+    Check_DoubleEntryKaisouMei(KaisouMei oyaKaisouMei , KaisouMei kaisouMei ){
+        this.oyaKaisouMei = oyaKaisouMei;
+        this.kaisouMei    =    kaisouMei;
+    }
+
+    protected Boolean isDouble(){
+        String checkKey = "親：" + oyaKaisouMei.kaisouMei()
+                       + "／子：" + kaisouMei.kaisouMei();
+        //重複チェック
+        return new Check_Base_DoubleEntry(checkKey).isDouble();
     }
 }
 
@@ -304,10 +318,10 @@ class Judge_SoshikiMeiConstraint {
     public Boolean isSoshikiMei() {
 
         //内容チェック
-        if (this.isBadContents()) { return false; }
+        if(this.isBadContents()) { return false; }
 
         //二重登録チェック
-        if (this.isDouble())      { return false; }
+        if(this.isDouble())      { return false; }
 
         //最終結果
         return true;
@@ -369,10 +383,6 @@ class Check_SoshikiMeiContents {
                 }
         }
     }
-
-    protected Boolean isBadContents() {
-            return !this.isContents();
-        }
 }
 
 //『組織名二重登録チェック』クラス
@@ -380,8 +390,6 @@ class Check_DoubleEntrySoshikiMei {
 
     private final KaisouMei kaisouMei;
     private final SoshikiMei soshikiMei;
-    private static final List<String> soshikiMeiList
-            = new ArrayList<>();
 
     //コンストラクタ
     public Check_DoubleEntrySoshikiMei( KaisouMei kaisouMei ,SoshikiMei soshikiMei ){
@@ -390,27 +398,11 @@ class Check_DoubleEntrySoshikiMei {
     }
 
     protected Boolean isDouble() {
-        String checkKey = kaisouMei.kaisouMei() + "／" + soshikiMei.soshikiMei();
-
-        //キー登録
-        keySet(checkKey);
-
-        //重複チェック(※けっきょく楽なんでStreamで逃げた)
-        if (soshikiMeiList
-                .stream()
-                .filter(allList -> allList.equals(checkKey))
-                .count() == 2
-            ) {
-                new SysOutErrorMessage_Judge_SoshikiMeiConstraint(
-                        "二重登録違反:[" + checkKey + "]"
-                );
-                return true;
-            }
-        else {
-                return false;
-            }
-        }
-    private void keySet(String newKey) { soshikiMeiList.add(newKey); }
+        String checkKey = kaisouMei.kaisouMei()
+                 + "／" + soshikiMei.soshikiMei();
+        //重複チェック
+        return new Check_Base_DoubleEntry(checkKey).isDouble();
+    }
 }
 
 //『組織名制約専用エラーメッセージ出力』クラス
