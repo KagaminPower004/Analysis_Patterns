@@ -25,30 +25,30 @@ class Soshiki {
     private final SoshikiMei    soshikiMei;
 
     //コンストラクタ
-    public Soshiki( int kaisouLevel ,String kaisouMei ,String soshikiMei) {
-        this.kaisouLevel  = new KaisouLevel(kaisouLevel);
-        this.kaisouMei    = new KaisouMei(kaisouMei);
-        this.soshikiMei   = new SoshikiMei(soshikiMei);
+    public Soshiki( int kaisouLevel ,String kaisouMei ,String soshikiMei ) {
+        this.kaisouLevel  = new KaisouLevel( kaisouLevel );
+        this.kaisouMei    = new KaisouMei( kaisouMei );
+        this.soshikiMei   = new SoshikiMei( soshikiMei );
         list = new ArrayList<>();
 
         //制約チェック(外だし)
         Judge_SoshikiMeiConstraint this_Soshiki
-                = new Judge_SoshikiMeiConstraint(this.kaisouMei,this.soshikiMei);
+                = new Judge_SoshikiMeiConstraint(this.kaisouMei ,this.soshikiMei);
         if(this_Soshiki.isBadSoshikiMei())
-            { throw new RuntimeException( "組織名の追加の際にエラーが発生致しました。" ); }
+            { throw new RuntimeException("組織名の追加の際にエラーが発生致しました。"); }
     }
 
-    public void add(Soshiki Soshiki){
+    public void add( Soshiki Soshiki ){
         KaisouMei oya = this.kaisouMei;
-        KaisouMei ko  = new KaisouMei(Soshiki.kaisouMei_toString());
+        KaisouMei ko  = new KaisouMei( Soshiki.kaisouMei_toString() );
 
         //制約チェック(外だし)
         Judge_KaisouConstraint this_Kaisou
-                = new Judge_KaisouConstraint( oya ,ko);
+                = new Judge_KaisouConstraint(oya ,ko);
         if(this_Kaisou.isBadKoKaisou())
-            { throw new RuntimeException( "組織階層の追加の際にエラーが発生致しました。" ); }
+            { throw new RuntimeException("組織階層の追加の際にエラーが発生致しました。"); }
 
-        list.add(Soshiki);
+        list.add( Soshiki );
     }
 
     public String kaisouMei_toString(){
@@ -58,7 +58,7 @@ class Soshiki {
     public void soshikiHyo(){
         //組織一覧を描画
         String sout
-                = new DrawThree(this.kaisouLevel.kaisouLevel()
+                = new DrawThree( this.kaisouLevel.kaisouLevel()
                                 ,this.kaisouMei.kaisouMei()
                                 ,this.soshikiMei.soshikiMei()
                                 ).Draw();
@@ -83,7 +83,7 @@ record KaisouLevel( Integer kaisouLevel ) {
 
         //レベル数値の範囲チェック
         Judge_RangeConstraint this_LevelValue
-                = new Judge_RangeConstraint(MAX_Charactor, MIN_Charactor, kaisouLevel);
+                = new Judge_RangeConstraint( MAX_Charactor ,MIN_Charactor ,kaisouLevel );
         if(this_LevelValue.isError())
             { throw new RuntimeException("設定した階層レベルは範囲内の数値ではございません。:[" + kaisouLevel + "]");}
     }
@@ -100,7 +100,7 @@ record KaisouMei(String kaisouMei ) {
 
         //文字数の範囲チェック
         Judge_RangeConstraint this_KaisouMei
-                = new Judge_RangeConstraint(MAX_Charactor, MIN_Charactor, kaisouMei.length());
+                = new Judge_RangeConstraint( MAX_Charactor ,MIN_Charactor ,kaisouMei.length() );
         if(this_KaisouMei.isError())
             { throw new RuntimeException("設定した階層名は範囲内の文字数ではございません。:[" + kaisouMei + "]");}
     }
@@ -117,7 +117,7 @@ record SoshikiMei( String soshikiMei ) {
 
         //文字数の範囲チェック
         Judge_RangeConstraint this_soshikiMei
-                = new Judge_RangeConstraint(MAX_Charactor, MIN_Charactor, soshikiMei.length());
+                = new Judge_RangeConstraint( MAX_Charactor ,MIN_Charactor ,soshikiMei.length() );
         if(this_soshikiMei.isError())
             { throw new RuntimeException("設定した組織名は範囲内の文字数ではございません。:[" + soshikiMei + "]");}
     }
@@ -130,7 +130,7 @@ class Judge_RangeConstraint {
     private final Integer _value;
 
     //コンストラクタ
-    public Judge_RangeConstraint(Integer _max, Integer _minimum, Integer _value){
+    public Judge_RangeConstraint( Integer _max ,Integer _minimum ,Integer _value ){
         this._max = _max;
         this._minimum = _minimum;
         this._value = _value;
@@ -153,7 +153,7 @@ class Judge_KaisouConstraint {
     private final KaisouMei kaisouMei;
 
     //コンストラクタ
-    Judge_KaisouConstraint(KaisouMei oyaKaisouMei , KaisouMei kaisouMei) {
+    Judge_KaisouConstraint( KaisouMei oyaKaisouMei ,KaisouMei kaisouMei ) {
         this.oyaKaisouMei   = oyaKaisouMei;
         this.kaisouMei      = kaisouMei;
     }
@@ -174,14 +174,14 @@ class Judge_KaisouConstraint {
 
     private Boolean isContents(){
         //内容チェック
-        return new Check_KaisouContents(this.oyaKaisouMei,this.kaisouMei)
+        return new Check_KaisouContents(this.oyaKaisouMei ,this.kaisouMei)
                 .isContents();
     }
     private Boolean isBadContents(){ return ! this.isContents(); }
 
     private Boolean isDouble(){
         //二重登録チェック
-        return new Check_DoubleEntryKaisouMei(this.oyaKaisouMei,this.kaisouMei)
+        return new Check_DoubleEntryKaisouMei(this.oyaKaisouMei ,this.kaisouMei)
                 .isDouble();
     }
 }
@@ -190,8 +190,8 @@ class Judge_KaisouConstraint {
 class SysOutErrorMessage_Judge_KaisouConstraint {
 
     //コンストラクタ
-    SysOutErrorMessage_Judge_KaisouConstraint(String kaisouMeiMessage) {
-        throw new RuntimeException(kaisouMeiMessage) ;
+    SysOutErrorMessage_Judge_KaisouConstraint( String kaisouMeiMessage ) {
+        throw new RuntimeException( kaisouMeiMessage ) ;
     }
 }
 
@@ -202,7 +202,7 @@ class Check_KaisouContents{
     private final KaisouMei kaisouMei;
 
     //コンストラクタ
-    Check_KaisouContents(KaisouMei oyaKaisouMei , KaisouMei kaisouMei ){
+    Check_KaisouContents( KaisouMei oyaKaisouMei ,KaisouMei kaisouMei ){
         this.oyaKaisouMei = oyaKaisouMei;
         this.kaisouMei    =    kaisouMei;
     }
@@ -255,7 +255,7 @@ class Check_Base_DoubleEntry {
             = new ArrayList<>();
 
     //コンストラクタ
-    Check_Base_DoubleEntry(String checkKey ){
+    Check_Base_DoubleEntry( String checkKey ){
         this.checkKey = checkKey;
     }
 
@@ -279,8 +279,8 @@ class Check_Base_DoubleEntry {
         else
         { return false; }
     }
-    private void keySet(String newKey){
-        entryList.add(newKey);
+    private void keySet( String newKey ){
+        entryList.add( newKey );
     }
 }
 
@@ -291,7 +291,7 @@ class Check_DoubleEntryKaisouMei{
     private final KaisouMei kaisouMei;
 
     //コンストラクタ
-    Check_DoubleEntryKaisouMei(KaisouMei oyaKaisouMei , KaisouMei kaisouMei ){
+    Check_DoubleEntryKaisouMei( KaisouMei oyaKaisouMei ,KaisouMei kaisouMei ){
         this.oyaKaisouMei = oyaKaisouMei;
         this.kaisouMei    =    kaisouMei;
     }
@@ -300,7 +300,7 @@ class Check_DoubleEntryKaisouMei{
         String checkKey = "親：" + oyaKaisouMei.kaisouMei()
                        + "／子：" + kaisouMei.kaisouMei();
         //重複チェック
-        return new Check_Base_DoubleEntry(checkKey).isDouble();
+        return new Check_Base_DoubleEntry( checkKey ).isDouble();
     }
 }
 
@@ -369,7 +369,7 @@ class Check_SoshikiMeiContents {
 
                 //『地域名』オブジェクトに例外処理を丸投げ
                 try {
-                        new TiikiMei(soshikiMei.soshikiMei());
+                        new TiikiMei( soshikiMei.soshikiMei() );
                     }
                 catch (Exception e) {
                     new SysOutErrorMessage_Judge_SoshikiMeiConstraint( e.getMessage() );
@@ -401,7 +401,7 @@ class Check_DoubleEntrySoshikiMei {
         String checkKey = kaisouMei.kaisouMei()
                  + "／" + soshikiMei.soshikiMei();
         //重複チェック
-        return new Check_Base_DoubleEntry(checkKey).isDouble();
+        return new Check_Base_DoubleEntry( checkKey ).isDouble();
     }
 }
 
@@ -409,29 +409,29 @@ class Check_DoubleEntrySoshikiMei {
 class SysOutErrorMessage_Judge_SoshikiMeiConstraint {
 
     //コンストラクタ
-    SysOutErrorMessage_Judge_SoshikiMeiConstraint(String SoshikiMeiMeiMessage) {
-        throw new RuntimeException(SoshikiMeiMeiMessage) ;
+    SysOutErrorMessage_Judge_SoshikiMeiConstraint( String SoshikiMeiMeiMessage ) {
+        throw new RuntimeException( SoshikiMeiMeiMessage ) ;
     }
 }
 
 //『地域名』値オブジェクト
-record TiikiMei(String tiikiMei) {
+record TiikiMei( String tiikiMei ) {
     private static final int MAX_Charactor = 30;
     private static final int MIN_Charactor = 1;
 
     //コンストラクタ
-    public TiikiMei(String tiikiMei){
+    public TiikiMei( String tiikiMei ){
         this.tiikiMei = tiikiMei;
 
         //文字数範囲チェック
         Judge_RangeConstraint this_tiikiMei
-                = new Judge_RangeConstraint(MAX_Charactor, MIN_Charactor, tiikiMei.length());
+                = new Judge_RangeConstraint( MAX_Charactor ,MIN_Charactor ,tiikiMei.length() );
         if(this_tiikiMei.isError())
             { throw new RuntimeException("設定した地域名は範囲内の文字数ではございません。:[" + tiikiMei + "]");}
 
         //地域名の内容チェック
         Judge_TiikiMeiConstraint this_tiikiMei_naiyo
-                = new Judge_TiikiMeiConstraint(tiikiMei);
+                = new Judge_TiikiMeiConstraint( tiikiMei );
         if(this_tiikiMei_naiyo.isError())
             { throw new RuntimeException("設定した地域名に該当する地域はございません。:[" + tiikiMei + "]");}
     }
@@ -442,9 +442,7 @@ class Judge_TiikiMeiConstraint {
     String tiikiMei;
 
     //コンストラクタ
-    Judge_TiikiMeiConstraint(String tiikiMei){
-        this.tiikiMei = tiikiMei;
-    }
+    Judge_TiikiMeiConstraint( String tiikiMei ){ this.tiikiMei = tiikiMei; }
 
     public boolean isCollect(){
 
@@ -471,7 +469,7 @@ class DrawThree {
     private final String soshikiMei;
 
     //コンストラクタ
-    DrawThree(Integer level, String KaisouMei, String soshikiMei){
+    DrawThree( Integer level ,String KaisouMei ,String soshikiMei ){
         this.level = level;
         this.KaisouMei = KaisouMei;
         this.soshikiMei = soshikiMei;
@@ -494,7 +492,7 @@ class DrawThree {
 
 //『アクター：業務担当者』クラス
 class Actor_GyoumuTantoSha {
-    public static void main(String[] args){
+    public static void main( String[] args ){
 
         //組織データ登録
         Soshiki JigyouBu      = new Soshiki(1,"事業部","IoT事業部");
