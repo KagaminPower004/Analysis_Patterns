@@ -8,7 +8,7 @@ public record TiikiMei(String tiikiMei ) {
     private static final int MIN_Charactor = 1;
 
     //コンストラクタ
-    public TiikiMei(String tiikiMei ){
+    public TiikiMei(final String tiikiMei ){
         this.tiikiMei = tiikiMei;
 
         //文字数範囲チェック
