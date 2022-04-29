@@ -7,15 +7,15 @@ class Actor_GyoumuTantoSha {
     public static void main( String[] args ){
 
         //組織データ登録
-        Soshiki JigyouBu      = new Soshiki(1,"事業部","IoT事業部");
-        Soshiki Tiiki         = new Soshiki(2,"地域","北陸");
-        Soshiki Bumon         = new Soshiki(3,"部門","第一営業部");
-        Soshiki ServiceCenter = new Soshiki(3,"サービスセンター","北陸サービスセンター");
-        Soshiki EigyouSho     = new Soshiki(4,"営業所","北陸第一営業所");
-//        Soshiki EigyouSho2     = new Soshiki(4,"営業所","北陸第一営業所"); //『階層名 + 組織名』の二重登録違反データ
-//        Soshiki EigyouSho3     = new Soshiki(4,"営業所",""); //範囲外データ(少)
-//        Soshiki EigyouSho4     = new Soshiki(4,"営業所","北陸第一営業所ショアアアアアアアアアアアアアアアアアア！！！"); //範囲外データ(多)
-//        Soshiki EigyouSho4     = new Soshiki(999,"宿営所","北陸『これからの星』宿営所"); //範囲外データ(多)
+        final Soshiki JigyouBu      = new Soshiki(1,"事業部","IoT事業部");
+        final Soshiki Tiiki         = new Soshiki(2,"地域","北陸");
+        final Soshiki Bumon         = new Soshiki(3,"部門","第一営業部");
+        final Soshiki ServiceCenter = new Soshiki(3,"サービスセンター","北陸サービスセンター");
+        final Soshiki EigyouSho     = new Soshiki(4,"営業所","北陸第一営業所");
+//        final Soshiki EigyouSho2     = new Soshiki(4,"営業所","北陸第一営業所"); //『階層名 + 組織名』の二重登録違反データ
+//        final Soshiki EigyouSho3     = new Soshiki(4,"営業所",""); //範囲外データ(少)
+//        final Soshiki EigyouSho4     = new Soshiki(4,"営業所","北陸第一営業所ショアアアアアアアアアアアアアアアアアア！！！"); //範囲外データ(多)
+//        final Soshiki EigyouSho4     = new Soshiki(999,"宿営所","北陸『これからの星』宿営所"); //範囲外データ(多)
 
         //階層紐づけ作業
         JigyouBu.linking(Tiiki);

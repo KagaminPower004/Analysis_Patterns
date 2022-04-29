@@ -6,10 +6,10 @@ import chapter02.section02.domain.support.value_object.SysOutErrorMessage;
 public class SysOutError_Base_Message {
 
     //コンストラクタ
-    public SysOutError_Base_Message(final String sysOutErrorMeiMessage
-    ) {
+    public SysOutError_Base_Message(final String sysOutErrorMeiMessage )
+    {
         //値オブジェクトにてメッセージ内容のチェック
-        SysOutErrorMessage this_SysOutErrorMessage
+        final SysOutErrorMessage this_SysOutErrorMessage
                 = new SysOutErrorMessage( sysOutErrorMeiMessage );
 
         final String e_Message = this_SysOutErrorMessage.SysOutErrorMessage();

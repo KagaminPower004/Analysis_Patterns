@@ -12,13 +12,13 @@ public record TiikiMei(String tiikiMei ) {
         this.tiikiMei = tiikiMei;
 
         //文字数範囲チェック
-        Judge_Base_RangeConstraint this_tiikiMei
+        final Judge_Base_RangeConstraint this_tiikiMei
                 = new Judge_Base_RangeConstraint( MAX_Charactor ,MIN_Charactor ,tiikiMei.length() );
         if(this_tiikiMei.isError())
         { throw new RuntimeException("設定した地域名は範囲内の文字数ではございません。:[" + tiikiMei + "]");}
 
         //地域名の内容チェック
-        Judge_TiikiMeiConstraint this_tiikiMei_naiyo
+        final Judge_TiikiMeiConstraint this_tiikiMei_naiyo
                 = new Judge_TiikiMeiConstraint( tiikiMei );
         if(this_tiikiMei_naiyo.isError())
         { throw new RuntimeException("設定した地域名に該当する地域はございません。:[" + tiikiMei + "]");}

@@ -33,7 +33,7 @@ public class Soshiki {
         list = new ArrayList<>();
 
         //制約チェック(外だし)
-        Judge_SoshikiMeiConstraint this_Soshiki
+        final Judge_SoshikiMeiConstraint this_Soshiki
                 = new Judge_SoshikiMeiConstraint( this.kaisouMei ,this.soshikiMei );
         if(this_Soshiki.isBadSoshikiMei())
         { throw new RuntimeException("組織名の追加の際にエラーが発生致しました。"); }
@@ -44,7 +44,7 @@ public class Soshiki {
         final KaisouMei ko  = new KaisouMei( Soshiki.kaisouMei_toString() );
 
         //制約チェック(外だし)
-        Judge_KaisouConstraint this_Kaisou
+        final Judge_KaisouConstraint this_Kaisou
                 = new Judge_KaisouConstraint(oya ,ko);
         if(this_Kaisou.isBadKoKaisou())
         { throw new RuntimeException("組織階層の追加の際にエラーが発生致しました。"); }

@@ -8,11 +8,12 @@ public record SysOutErrorMessage( String SysOutErrorMessage) {
     private static final int MIN_Charactor = 1;
 
     //コンストラクタ
-    public SysOutErrorMessage( final String SysOutErrorMessage){
+    public SysOutErrorMessage( final String SysOutErrorMessage)
+    {
         this.SysOutErrorMessage = SysOutErrorMessage;
 
         //レベル数値の範囲チェック
-        Judge_Base_RangeConstraint this_SysOutErrorMessage
+        final Judge_Base_RangeConstraint this_SysOutErrorMessage
                 = new Judge_Base_RangeConstraint( MAX_Charactor ,MIN_Charactor , SysOutErrorMessage.length() );
         if(this_SysOutErrorMessage.isError())
         { throw new RuntimeException("設定したエラーメッセージは範囲内の文字数ではございません。:[" + SysOutErrorMessage + "]");}

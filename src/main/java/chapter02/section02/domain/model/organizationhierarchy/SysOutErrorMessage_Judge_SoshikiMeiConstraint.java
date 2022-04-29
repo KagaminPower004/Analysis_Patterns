@@ -6,8 +6,8 @@ import chapter02.section02.domain.support.base.SysOutError_Base_Message;
 class SysOutErrorMessage_Judge_SoshikiMeiConstraint {
 
     //コンストラクタ
-    SysOutErrorMessage_Judge_SoshikiMeiConstraint( final String SoshikiMeiMeiMessage
-    ) {
+    SysOutErrorMessage_Judge_SoshikiMeiConstraint( final String SoshikiMeiMeiMessage )
+    {
         //※マトリョーシカ
         new SysOutError_Base_Message( SoshikiMeiMeiMessage );
     }

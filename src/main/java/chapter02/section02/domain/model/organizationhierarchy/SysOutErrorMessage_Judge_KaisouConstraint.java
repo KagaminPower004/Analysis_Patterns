@@ -6,8 +6,8 @@ import chapter02.section02.domain.support.base.SysOutError_Base_Message;
 class SysOutErrorMessage_Judge_KaisouConstraint {
 
     //コンストラクタ
-    SysOutErrorMessage_Judge_KaisouConstraint( final String kaisouMeiMessage
-    ) {
+    SysOutErrorMessage_Judge_KaisouConstraint( final String kaisouMeiMessage )
+    {
         //※マトリョーシカ
         new SysOutError_Base_Message( kaisouMeiMessage );
     }
