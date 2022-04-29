@@ -58,7 +58,7 @@ public class Soshiki {
 
     public void soshikiHyo(){
         //組織一覧を描画
-        String sout
+        final String sout
                 = new DrawThree( this.kaisouLevel.kaisouLevel()
                 ,this.kaisouMei.kaisouMei()
                 ,this.soshikiMei.soshikiMei()
