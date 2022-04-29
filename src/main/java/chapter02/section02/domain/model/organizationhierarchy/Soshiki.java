@@ -39,7 +39,7 @@ public class Soshiki {
         { throw new RuntimeException("組織名の追加の際にエラーが発生致しました。"); }
     }
 
-    public void linking(Soshiki Soshiki ){
+    public void linking(final Soshiki Soshiki ){
         final KaisouMei oya = this.kaisouMei;
         final KaisouMei ko  = new KaisouMei( Soshiki.kaisouMei_toString() );
 
