@@ -8,7 +8,11 @@ class DrawThree {
     private final String soshikiMei;
 
     //コンストラクタ
-    DrawThree( Integer level ,String KaisouMei ,String soshikiMei ){
+    DrawThree(
+             final Integer level
+            ,final String KaisouMei
+            ,final String soshikiMei
+    ){
         this.level = level;
         this.KaisouMei = KaisouMei;
         this.soshikiMei = soshikiMei;

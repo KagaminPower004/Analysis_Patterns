@@ -8,7 +8,10 @@ class Judge_SoshikiMeiConstraint {
     private final SoshikiMei soshikiMei;
 
     //コンストラクタ
-    Judge_SoshikiMeiConstraint( KaisouMei kaisouMei , SoshikiMei soshikiMei ){
+    Judge_SoshikiMeiConstraint(
+             final KaisouMei kaisouMei
+            ,final  SoshikiMei soshikiMei
+    ){
         this.kaisouMei = kaisouMei;
         this.soshikiMei = soshikiMei;
     }

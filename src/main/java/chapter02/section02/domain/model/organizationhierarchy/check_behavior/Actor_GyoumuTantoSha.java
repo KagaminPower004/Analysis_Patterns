@@ -33,5 +33,9 @@ class Actor_GyoumuTantoSha {
 
         //組織表描画(追加)
         ServiceCenter.soshikiHyo();
+
+        System.out.println("---------------------------------------------------------");
+        //組織表描画(まとめてすべて)
+        JigyouBu.soshikiHyo();
     }
 }

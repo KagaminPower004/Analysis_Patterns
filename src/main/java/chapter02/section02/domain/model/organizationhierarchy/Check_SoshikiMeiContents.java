@@ -10,7 +10,10 @@ class Check_SoshikiMeiContents {
     private final SoshikiMei soshikiMei;
 
     //コンストラクタ
-    Check_SoshikiMeiContents(KaisouMei kaisouMei , SoshikiMei soshikiMei ){
+    Check_SoshikiMeiContents(
+              final KaisouMei kaisouMei
+            , final SoshikiMei soshikiMei
+    ){
         this.kaisouMei = kaisouMei;
         this.soshikiMei = soshikiMei;
     }

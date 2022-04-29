@@ -9,7 +9,10 @@ class Check_KaisouContents{
     private final KaisouMei kaisouMei;
 
     //コンストラクタ
-    Check_KaisouContents(KaisouMei oyaKaisouMei , KaisouMei kaisouMei){
+    Check_KaisouContents(
+              final KaisouMei oyaKaisouMei
+            , final KaisouMei kaisouMei
+    ){
         this.oyaKaisouMei = oyaKaisouMei;
         this.kaisouMei    =    kaisouMei;
     }
