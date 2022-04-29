@@ -5,7 +5,7 @@ class Judge_TiikiMeiConstraint {
     String tiikiMei;
 
     //コンストラクタ
-    Judge_TiikiMeiConstraint(String tiikiMei ){ this.tiikiMei = tiikiMei; }
+    Judge_TiikiMeiConstraint( final String tiikiMei ){ this.tiikiMei = tiikiMei; }
 
     boolean isCollect(){
 

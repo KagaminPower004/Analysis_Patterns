@@ -22,7 +22,11 @@ public class Soshiki {
     private final SoshikiMei soshikiMei;
 
     //コンストラクタ
-    public Soshiki( int kaisouLevel ,String kaisouMei ,String soshikiMei ) {
+    public Soshiki(
+             final int kaisouLevel
+            ,final String kaisouMei
+            ,final String soshikiMei
+    ){
         this.kaisouLevel  = new KaisouLevel( kaisouLevel );
         this.kaisouMei    = new KaisouMei( kaisouMei );
         this.soshikiMei   = new SoshikiMei( soshikiMei );

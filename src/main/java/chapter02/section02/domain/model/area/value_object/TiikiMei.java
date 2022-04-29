@@ -1,6 +1,6 @@
 package chapter02.section02.domain.model.area.value_object;
 
-import chapter02.section02.domain.support.Judge_Base_RangeConstraint;
+import chapter02.section02.domain.support.base.Judge_Base_RangeConstraint;
 
 //『地域名』値オブジェクト
 public record TiikiMei(String tiikiMei ) {

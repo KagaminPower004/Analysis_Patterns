@@ -9,7 +9,10 @@ class Judge_KaisouConstraint {
     private final KaisouMei kaisouMei;
 
     //コンストラクタ
-    Judge_KaisouConstraint( KaisouMei oyaKaisouMei , KaisouMei kaisouMei ) {
+    Judge_KaisouConstraint(
+              final KaisouMei oyaKaisouMei
+            , final KaisouMei kaisouMei
+    ) {
         this.oyaKaisouMei   = oyaKaisouMei;
         this.kaisouMei      = kaisouMei;
     }

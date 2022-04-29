@@ -1,6 +1,6 @@
 package chapter02.section02.domain.support.value_object;
 
-import chapter02.section02.domain.support.Judge_Base_RangeConstraint;
+import chapter02.section02.domain.support.base.Judge_Base_RangeConstraint;
 
 //『階層レベル』値オブジェクト
 public record SysOutErrorMessage( String SysOutErrorMessage) {

@@ -1,7 +1,7 @@
 package chapter02.section02.domain.model.organizationhierarchy;
 
 import chapter02.section02.domain.model.organizationhierarchy.value_object.*;
-import chapter02.section02.domain.support.Check_Base_DoubleEntry;
+import chapter02.section02.domain.support.base.Check_Base_DoubleEntry;
 
 //『階層名二重登録チェック』クラス
 class Check_DoubleEntryKaisouMei{
@@ -10,7 +10,10 @@ class Check_DoubleEntryKaisouMei{
     private final KaisouMei kaisouMei;
 
     //コンストラクタ
-    Check_DoubleEntryKaisouMei( KaisouMei oyaKaisouMei , KaisouMei kaisouMei ){
+    Check_DoubleEntryKaisouMei(
+              final KaisouMei oyaKaisouMei
+            , final KaisouMei kaisouMei
+    ){
         this.oyaKaisouMei = oyaKaisouMei;
         this.kaisouMei    =    kaisouMei;
     }
