@@ -8,7 +8,7 @@ public record SysOutErrorMessage( String SysOutErrorMessage) {
     private static final int MIN_Charactor = 1;
 
     //コンストラクタ
-    public SysOutErrorMessage( String SysOutErrorMessage){
+    public SysOutErrorMessage( final String SysOutErrorMessage){
         this.SysOutErrorMessage = SysOutErrorMessage;
 
         //レベル数値の範囲チェック

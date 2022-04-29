@@ -19,8 +19,8 @@ class Check_DoubleEntryKaisouMei{
     }
 
     Boolean isDouble(){
-        String checkKey = "親：" + oyaKaisouMei.kaisouMei()
-                + "／子：" + kaisouMei.kaisouMei();
+        final String checkKey = "親：" + oyaKaisouMei.kaisouMei()
+                            + "／子：" + kaisouMei.kaisouMei();
         //※マトリョーシカ//重複チェック
         return new Check_Base_DoubleEntry( checkKey ).isDouble();
     }

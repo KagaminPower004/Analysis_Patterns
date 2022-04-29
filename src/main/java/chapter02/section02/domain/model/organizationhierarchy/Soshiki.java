@@ -40,8 +40,8 @@ public class Soshiki {
     }
 
     public void linking(Soshiki Soshiki ){
-        KaisouMei oya = this.kaisouMei;
-        KaisouMei ko  = new KaisouMei( Soshiki.kaisouMei_toString() );
+        final KaisouMei oya = this.kaisouMei;
+        final KaisouMei ko  = new KaisouMei( Soshiki.kaisouMei_toString() );
 
         //制約チェック(外だし)
         Judge_KaisouConstraint this_Kaisou
@@ -58,14 +58,14 @@ public class Soshiki {
 
     public void soshikiHyo(){
         //組織一覧を描画
-        String sout
+        final String sout
                 = new DrawThree( this.kaisouLevel.kaisouLevel()
                 ,this.kaisouMei.kaisouMei()
                 ,this.soshikiMei.soshikiMei()
         ).Draw();
         System.out.println(sout);
 
-        for (Soshiki listElement : list) {
+        for (final Soshiki listElement : list) {
             listElement.soshikiHyo();
         }
     }

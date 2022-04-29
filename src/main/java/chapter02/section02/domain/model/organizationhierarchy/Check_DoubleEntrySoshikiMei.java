@@ -19,8 +19,8 @@ class Check_DoubleEntrySoshikiMei {
     }
 
     Boolean isDouble() {
-        String checkKey = kaisouMei.kaisouMei()
-                + "／" + soshikiMei.soshikiMei();
+        final String checkKey = kaisouMei.kaisouMei()
+                        + "／" + soshikiMei.soshikiMei();
         //※マトリョーシカ//重複チェック
         return new Check_Base_DoubleEntry( checkKey ).isDouble();
     }

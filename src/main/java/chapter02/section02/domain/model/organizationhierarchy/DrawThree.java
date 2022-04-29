@@ -19,10 +19,10 @@ class DrawThree {
     }
 
     String Draw(){
-        String Branch = null;
-        String leaf = KaisouMei + ":" + soshikiMei;
-        String root = soshikiMei;
+        final String leaf = KaisouMei + ":" + soshikiMei;
+        final String root = soshikiMei;
 
+        String Branch = null;
         switch (level){
             case 1 -> Branch = root;
             case 2 -> Branch = "\t" + leaf;

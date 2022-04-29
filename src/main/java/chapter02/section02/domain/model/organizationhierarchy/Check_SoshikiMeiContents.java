@@ -28,7 +28,7 @@ class Check_SoshikiMeiContents {
                 try {
                     new TiikiMei( soshikiMei.soshikiMei() );
                 }
-                catch (Exception e) {
+                catch (final Exception e) {
                     new SysOutErrorMessage_Judge_SoshikiMeiConstraint( e.getMessage() );
                     return false;
                 }

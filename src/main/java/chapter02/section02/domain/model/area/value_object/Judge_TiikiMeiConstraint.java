@@ -2,7 +2,7 @@ package chapter02.section02.domain.model.area.value_object;
 
 //『地域名制約』クラス(の、つもり。。。)
 class Judge_TiikiMeiConstraint {
-    String tiikiMei;
+    final String tiikiMei;
 
     //コンストラクタ
     Judge_TiikiMeiConstraint( final String tiikiMei ){ this.tiikiMei = tiikiMei; }
